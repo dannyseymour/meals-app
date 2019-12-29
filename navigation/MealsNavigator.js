@@ -10,6 +10,22 @@ import { createBottomTabNavigator} from "react-navigation-tabs";
 import FavoritesScreen from "../screens/FavoritesScreen";
 import { Ionicons } from "@expo/vector-icons";
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs'
+import { createDrawerNavigator} from "react-navigation-drawer";
+import FiltersScreen from "../screens/FiltersScreen";
+
+const FavoritesNavigator = createStackNavigator({
+      Favorites: FavoritesScreen,
+      MealDetails: MealDetailScreen
+    },
+    {
+      defaultNavigationOptions: {
+        headerTitle: 'Your Favorites',
+        headerStyle: {
+          backgroundColor: Platform.OS ==='android' ? Colors.primaryColor : 'white'
+        },
+        headerTintColor: Platform.OS ==='android' ? 'white' : Colors.primaryColor
+      }}
+);
 
 const MealsNavigator = createStackNavigator({
   Categories: CategoriesScreen,
@@ -39,7 +55,7 @@ const tabScreenConfig = {
         tabBarColor: Colors.primaryColor,
       },
       Favorites: {
-        screen: FavoritesScreen,
+        screen: FavoritesNavigator,
         navigationOptions:{
           tabBarIcon: (tabInfo) =>{
             return <Ionicons name={'ios-star'} size={25} color={tabInfo.tintColor}/>
@@ -61,8 +77,37 @@ const MealsFavTabNavigator =  Platform.OS === 'android' ? createMaterialBottomTa
     {
       tabBarOptions:{activeTintColor: Colors.accentColor}
     });
+const FiltersNavigator = createStackNavigator({
+  Filters: FiltersScreen
+},{
 
-export default createAppContainer(MealsFavTabNavigator);
+  defaultNavigationOptions: {
+    headerTitle: 'Meals',
+    headerStyle: {
+      backgroundColor: Platform.OS ==='android' ? Colors.primaryColor : 'white'
+    },
+    headerTintColor: Platform.OS ==='android' ? 'white' : Colors.primaryColor
+  }});
+
+const MainNavigator = createDrawerNavigator({
+  MealsFavs: {
+    screen: MealsFavTabNavigator,
+    navigationOptions:{
+      drawerLabel: 'Meals'
+    }
+  },
+  Filters: FiltersNavigator,
+},
+    {
+      contentOptions:{
+        activeTintColor: Colors.accentColor,
+        labelStyle: {
+          fontFamily: 'open-sans-bold'
+        }
+      }
+    });
+
+export default createAppContainer(MainNavigator);
 
 
 
